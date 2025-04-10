@@ -1,0 +1,321 @@
+components:
+  schemas:
+    User:
+      type: object
+      properties:
+        id:
+          type: string
+        email:
+          type: string
+          format: email
+        name:
+          type: string
+        role:
+          type: string
+          enum: [user, admin]
+        isEmailVerified:
+          type: boolean
+        phone:
+          type: string
+        address:
+          type: object
+          properties:
+            street:
+              type: string
+            city:
+              type: string
+            state:
+              type: string
+            zipCode:
+              type: string
+            country:
+              type: string
+        paymentDetails:
+          type: object
+          properties:
+            stripeCustomerId:
+              type: string
+      example:
+        id: 5ebac534954b54139806c112
+        email: fake@example.com
+        name: John Doe
+        role: user
+        isEmailVerified: false
+        phone: "1234567890"
+        address:
+          street: 123 Main St
+          city: Anytown
+          state: CA
+          zipCode: "12345"
+          country: USA
+
+    Product:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        description:
+          type: string
+        price:
+          type: number
+        compareAtPrice:
+          type: number
+        images:
+          type: array
+          items:
+            type: object
+            properties:
+              url:
+                type: string
+              alt:
+                type: string
+        category:
+          type: string
+        inventory:
+          type: number
+        sku:
+          type: string
+        weight:
+          type: number
+        dimensions:
+          type: object
+          properties:
+            length:
+              type: number
+            width:
+              type: number
+            height:
+              type: number
+        isActive:
+          type: boolean
+        tags:
+          type: array
+          items:
+            type: string
+        attributes:
+          type: array
+          items:
+            type: object
+            properties:
+              name:
+                type: string
+              value:
+                type: string
+        variants:
+          type: array
+          items:
+            type: object
+            properties:
+              name:
+                type: string
+              options:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    name:
+                      type: string
+                    price:
+                      type: number
+                    inventory:
+                      type: number
+                    sku:
+                      type: string
+        reviews:
+          type: array
+          items:
+            type: object
+            properties:
+              user:
+                type: string
+              rating:
+                type: number
+              comment:
+                type: string
+              createdAt:
+                type: string
+                format: date-time
+        averageRating:
+          type: number
+
+    Order:
+      type: object
+      properties:
+        id:
+          type: string
+        user:
+          type: string
+        items:
+          type: array
+          items:
+            type: object
+            properties:
+              product:
+                type: string
+              quantity:
+                type: number
+              price:
+                type: number
+              variant:
+                type: object
+                properties:
+                  name:
+                    type: string
+                  option:
+                    type: string
+        billingAddress:
+          type: object
+          properties:
+            fullName:
+              type: string
+            street:
+              type: string
+            city:
+              type: string
+            state:
+              type: string
+            zipCode:
+              type: string
+            country:
+              type: string
+            phone:
+              type: string
+        shippingAddress:
+          type: object
+          properties:
+            fullName:
+              type: string
+            street:
+              type: string
+            city:
+              type: string
+            state:
+              type: string
+            zipCode:
+              type: string
+            country:
+              type: string
+            phone:
+              type: string
+        paymentMethod:
+          type: string
+          enum: [credit_card, paypal, stripe, bank_transfer]
+        paymentDetails:
+          type: object
+          properties:
+            transactionId:
+              type: string
+            status:
+              type: string
+              enum: [pending, completed, failed, refunded]
+            amount:
+              type: number
+            currency:
+              type: string
+            paymentDate:
+              type: string
+              format: date-time
+        status:
+          type: string
+          enum: [pending, processing, shipped, delivered, cancelled, refunded]
+        subtotal:
+          type: number
+        tax:
+          type: number
+        shipping:
+          type: number
+        discount:
+          type: number
+        total:
+          type: number
+        couponCode:
+          type: string
+        notes:
+          type: string
+        trackingNumber:
+          type: string
+        carrier:
+          type: string
+        estimatedDelivery:
+          type: string
+          format: date-time
+        actualDelivery:
+          type: string
+          format: date-time
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+
+    AuthTokens:
+      type: object
+      properties:
+        access:
+          type: object
+          properties:
+            token:
+              type: string
+            expires:
+              type: string
+              format: date-time
+        refresh:
+          type: object
+          properties:
+            token:
+              type: string
+            expires:
+              type: string
+              format: date-time
+
+    Error:
+      type: object
+      properties:
+        code:
+          type: number
+        message:
+          type: string
+
+  responses:
+    DuplicateEmail:
+      description: Email already taken
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            code: 400
+            message: Email already taken
+    
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            code: 401
+            message: Please authenticate
+    
+    Forbidden:
+      description: Forbidden
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            code: 403
+            message: Forbidden
+    
+    NotFound:
+      description: Not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            code: 404
+            message: Not found 
