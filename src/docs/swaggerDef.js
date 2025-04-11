@@ -17,6 +17,10 @@ const swaggerDef = {
       url: `http://localhost:${config.port}/v1`,
       description: "Development Server",
     },
+    {
+      url: "https://shopupuk-back.onrender.com/v1",
+      description: "Production Server",
+    },
   ],
   components: {
     securitySchemes: {
