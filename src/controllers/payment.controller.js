@@ -24,7 +24,7 @@ const createPaymentIntent = catchAsync(async (req, res) => {
   // Create payment intent
   const paymentIntent = await paymentService.createPaymentIntent({
     amount: order.total,
-    currency: "usd",
+    currency: "gbp",
     customer: {
       userId: req.user.id,
       email: req.user.email,
