@@ -79,6 +79,10 @@ const deleteUserById = async (userId) => {
   return user;
 };
 
+const getTotalUsers = async (req, res) => {
+  return User.countDocuments();
+};
+
 module.exports = {
   createUser,
   queryUsers,
@@ -86,4 +90,5 @@ module.exports = {
   getUserByEmail,
   updateUserById,
   deleteUserById,
+  getTotalUsers
 }; 

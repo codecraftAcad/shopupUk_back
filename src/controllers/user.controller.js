@@ -3,6 +3,7 @@ const pick = require('../utils/pick');
 const ApiError = require('../utils/ApiError');
 const catchAsync = require('../utils/catchAsync');
 const { userService } = require('../services');
+const { User } = require('../models');
 
 const createUser = catchAsync(async (req, res) => {
   const user = await userService.createUser(req.body);
@@ -95,6 +96,8 @@ const deleteUserAddress = catchAsync(async (req, res) => {
   res.status(httpStatus.NO_CONTENT).send();
 });
 
+
+
 module.exports = {
   createUser,
   getUsers,
@@ -107,4 +110,5 @@ module.exports = {
   addUserAddress,
   updateUserAddress,
   deleteUserAddress,
+ 
 }; 
