@@ -47,6 +47,13 @@ const getProducts = catchAsync(async (req, res) => {
     filter.isActive = filter.isActive === "true";
   }
 
+  // Handle category filtering
+if (filter.category && typeof filter.category === "string") {
+  const categories = filter.category.split(",").map((c) => c.trim());
+  filter.category = { $in: categories };
+}
+
+
   const result = await Product.paginate(filter, options);
   res.send(result);
 });
