@@ -35,6 +35,7 @@
     "helmet": "^6.1.5",
     "http-status": "^1.6.2",
     "joi": "^17.9.2",
+    "json2csv": "^6.0.0-alpha.2",
     "jsonwebtoken": "^9.0.0",
     "moment": "^2.29.4",
     "mongoose": "^7.1.0",

@@ -10,6 +10,7 @@ const {
 } = require("../services");
 const ApiError = require("../utils/ApiError");
 const { User } = require("../models");
+const exportToCSV = require("../utils/csvExporter");
 
 // Dashboard Statistics
 const getDashboardStats = catchAsync(async (req, res) => {
@@ -169,6 +170,39 @@ const login = catchAsync(async (req, res) => {
   res.send({ user, tokens });
 });
 
+const exportProductsCSV = catchAsync(async (req, res) => {
+  const products = await productService.getAllProducts();
+
+  const fields = ["_id", "name", "price", "category", "inventory", "featured"];
+  const csv = exportToCSV(products, fields);
+
+  res.header("Content-Type", "text/csv");
+  res.attachment("products.csv");
+  res.send(csv);
+});
+
+
+const bulkCreateProducts = catchAsync(async (req, res) => {
+  const { products } = req.body;
+
+  if (!Array.isArray(products) || products.length === 0) {
+    throw new ApiError(httpStatus.BAD_REQUEST, "No products provided.");
+  }
+
+  try {
+    const insertedProducts = await productService.bulkCreateProducts(products);
+    res.status(httpStatus.CREATED).send(insertedProducts);
+  } catch (error) {
+    console.error("Bulk insert error:", error);
+    throw new ApiError(
+      httpStatus.INTERNAL_SERVER_ERROR,
+      "Failed to create products."
+    );
+  }
+});
+
+
+
 module.exports = {
   login,
   getDashboardStats,
@@ -190,4 +224,6 @@ module.exports = {
   updateCategory,
   deleteCategory,
   getTotalUsers,
+  exportProductsCSV,
+  bulkCreateProducts,
 };

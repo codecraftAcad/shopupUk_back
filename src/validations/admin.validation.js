@@ -41,6 +41,40 @@ const createProduct = {
 };
 
 
+  
+const bulkCreateProducts = {
+  body: Joi.object().keys({
+    products: Joi.array()
+      .items(
+        Joi.object({
+          name: Joi.string().required(),
+          description: Joi.string().required(),
+          price: Joi.number().required(),
+          category: Joi.string().required(),
+          subcategory: Joi.string().optional().allow(""),
+          inventory: Joi.number().required(),
+          images: Joi.array().items(
+            Joi.object({
+              url: Joi.string().uri().optional().allow(""),
+              alt: Joi.string().required(),
+            })
+          ),
+          attributes: Joi.array().items(
+            Joi.object({
+              name: Joi.string().optional().allow(""),
+              value: Joi.string().optional().allow(""),
+            })
+          ),
+        })
+      )
+      .min(1)
+      .required(),
+  }),
+}
+
+
+
+
 const updateProduct = {
   params: Joi.object().keys({
     productId: Joi.string().custom(objectId),
@@ -194,4 +228,5 @@ module.exports = {
   createCategory,
   updateCategory,
   deleteCategory,
+  bulkCreateProducts,
 };

@@ -19,6 +19,38 @@ const productSchema = mongoose.Schema(
       required: true,
       min: 0,
     },
+    discount: {
+      type: Number,
+      min: 0,
+      max: 100,
+    },
+    history: {
+      lastRestockedAt: { type: Date, default: Date.now },
+      lastRestockBy: { type: mongoose.SchemaTypes.ObjectId, ref: "User" },
+      previousStockLevel: { type: Number, min: 0 },
+      addedStock: { type: Number, min: 0 },
+    },
+
+    changelogs: [
+      {
+        changedAt: {
+          type: Date,
+          default: Date.now,
+        },
+        changedBy: {
+          type: mongoose.SchemaTypes.ObjectId,
+          ref: "User",
+        },
+        changes: [
+          {
+            change: {
+              type: String,
+              required: true,
+            },
+          },
+        ],
+      },
+    ],
     compareAtPrice: {
       type: Number,
       min: 0,

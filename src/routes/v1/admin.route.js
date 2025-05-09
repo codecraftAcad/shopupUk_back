@@ -14,6 +14,12 @@ router.post(
   adminController.login
 );
 
+// Export all products as CSV
+router.get(
+  "/products/export/csv",
+  adminController.exportProductsCSV
+);
+
 // Protected admin routes - require both authentication and admin role
 router.use(auth(), adminAuth());
 
@@ -24,6 +30,14 @@ router
   .route("/products")
   .get(validate(adminValidation.getProducts), adminController.getProducts)
   .post(validate(adminValidation.createProduct), adminController.createProduct);
+
+  // Bulk create products
+router.post(
+  "/products/bulk",
+  validate(adminValidation.bulkCreateProducts),
+  adminController.bulkCreateProducts
+);
+
 
 router
   .route("/products/:productId")
@@ -72,5 +86,9 @@ router
     validate(adminValidation.deleteCategory),
     adminController.deleteCategory
   );
+
+
+
+  
 
 module.exports = router;

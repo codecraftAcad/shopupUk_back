@@ -82,6 +82,7 @@ const updateProduct = {
       name: Joi.string(),
       description: Joi.string(),
       price: Joi.number().min(0),
+      discount: Joi.number().min(0).max(100),
       compareAtPrice: Joi.number().min(0),
       images: Joi.array().items(
         Joi.object().keys({
@@ -103,12 +104,14 @@ const updateProduct = {
       isNew: Joi.boolean(),
       featured: Joi.boolean(),
       tags: Joi.array().items(Joi.string()),
+
       attributes: Joi.array().items(
         Joi.object().keys({
           name: Joi.string().required(),
           value: Joi.string().required(),
         })
       ),
+
       variants: Joi.array().items(
         Joi.object().keys({
           name: Joi.string().required(),
@@ -122,9 +125,40 @@ const updateProduct = {
           ),
         })
       ),
+
+      history: Joi.object().keys({
+        lastRestockedAt: Joi.date(),
+        lastRestockBy: Joi.string().custom(objectId),
+        previousStockLevel: Joi.number().min(0),
+        addedStock: Joi.number().min(0),
+      }),
+
+      changelogs: Joi.array().items(
+        Joi.object().keys({
+          changedAt: Joi.date(),
+          changedBy: Joi.string().custom(objectId),
+          changes: Joi.array().items(
+            Joi.object().keys({
+              change: Joi.string().required(),
+            })
+          ),
+        })
+      ),
+
+      reviews: Joi.array().items(
+        Joi.object().keys({
+          user: Joi.string().custom(objectId).required(),
+          rating: Joi.number().min(1).max(5).required(),
+          comment: Joi.string(),
+          createdAt: Joi.date(),
+        })
+      ),
+
+      averageRating: Joi.number().min(0).max(5),
     })
     .min(1),
 };
+
 
 const deleteProduct = {
   params: Joi.object().keys({

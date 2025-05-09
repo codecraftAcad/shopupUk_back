@@ -122,6 +122,40 @@ const deleteCategoryById = async (categoryId) => {
   return { message: "Category deleted" };
 };
 
+
+
+/**
+ * Get all products (no pagination)
+ * @param {Object} filter - MongoDB query object
+ * @returns {Promise<Array>}
+ */
+const getAllProducts = async (filter = {}) => {
+  return Product.find(filter).lean(); // .lean() makes it fast for read-only
+};
+
+
+/**
+ * Bulk create products from array of product objects
+ * @param {Array} products - Array of product objects
+ * @returns {Promise<Array>} - Inserted products
+ */
+const bulkCreateProducts = async (products) => {
+  if (!Array.isArray(products) || products.length === 0) {
+    throw new ApiError(httpStatus.BAD_REQUEST, "No products to insert");
+  }
+
+  try {
+    const inserted = await Product.insertMany(products, {
+      ordered: false, // allows it to continue even if some fail
+    });
+    return inserted;
+  } catch (error) {
+    console.error("Bulk product insert error:", error);
+    throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, "Failed to insert products");
+  }
+};
+
+
 module.exports = {
   createProduct,
   queryProducts,
@@ -133,4 +167,6 @@ module.exports = {
   createCategory,
   updateCategoryById,
   deleteCategoryById,
+  getAllProducts,
+  bulkCreateProducts,
 };
